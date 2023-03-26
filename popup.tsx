@@ -1,28 +1,45 @@
-import { useState } from "react"
+import React from "react"
 
-function IndexPopup() {
-  const [data, setData] = useState("")
+function CounterApp() {
+  const [count, setCount] = React.useState<number>(0)
+
+  const updateCount = (value: number) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tabId = tabs[0].id
+      chrome.storage.local.get(tabId.toString(), (result) => {
+        const count = result[tabId.toString()] || 0
+        chrome.storage.local.set({ [tabId]: count + value }, () => {
+          setCount(count + value)
+        })
+      })
+    })
+  }
+
+  React.useEffect(() => {
+    updateCount(0)
+  }, [])
+
+  const increment = () => updateCount(1)
+  const decrement = () => updateCount(-1)
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 16
+        width: "80px"
       }}>
-      <h2>
-        Welcome to your{" "}
-        <a href="https://www.plasmo.com" target="_blank">
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
+      <h4>Counter: {count}</h4>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px"
+        }}>
+        <button onClick={increment}>+</button>
+        <button disabled={count <= 0} onClick={decrement}>
+          -
+        </button>
+      </div>
     </div>
   )
 }
 
-export default IndexPopup
+export default CounterApp
