@@ -2,6 +2,8 @@ This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with
 
 ## Getting Started
 
+Counter Extension Video:-   https://www.loom.com/share/04aaf04ad4ce43448252afd1170f54a6
+
 First, run the development server:
 
 ```bash
